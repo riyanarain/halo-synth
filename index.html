@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Halo — gesture light synth</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <video id="cam" playsinline muted></video>
+  <canvas id="stage"></canvas>
+
+  <section id="intro">
+    <h1>HALO</h1>
+    <p>Play light with your hands. A webcam, a synth, and a looper — nothing is sent anywhere.</p>
+    <div class="row">
+      <button id="startCam" class="primary">Start with camera</button>
+      <button id="startKb">Keyboard only</button>
+    </div>
+    <p id="status" class="dim">Best in Chrome or Edge. Headphones recommended.</p>
+  </section>
+
+  <div id="hud" class="hidden">
+    <div class="left">
+      <div id="chord">Am</div>
+      <div id="loop" data-state="idle"></div>
+    </div>
+    <div class="right">
+      <label>Key <select id="key"></select></label>
+      <label>Scale <select id="scale"></select></label>
+      <button id="mode">Fingers: chord tones</button>
+      <button id="rec">Loop</button>
+      <button id="undo">Undo</button>
+      <button id="clear">Clear</button>
+      <button id="feed">Camera feed</button>
+      <button id="helpBtn">?</button>
+    </div>
+  </div>
+
+  <aside id="help" class="hidden">
+    <h2>Hands</h2>
+    <p><b>Left hand</b> — height picks the chord (ruler on the left). Open hand = louder, brighter pad. Tilt right for a 7th, left for sus2. <b>Hold a fist</b> to record / stop the loop.</p>
+    <p><b>Right hand</b> — pinch thumb to index / middle / ring / pinky to play notes. Faster pinch = louder. Hand height = octave, tilt = brightness, move right = more echo and reverb.</p>
+    <h2>Keys</h2>
+    <p><kbd>A S D F</kbd> notes · <kbd>1</kbd>–<kbd>7</kbd> chord · <kbd>↑↓</kbd> octave · <kbd>Space</kbd> loop / overdub · <kbd>Z</kbd> undo · <kbd>⌫</kbd> clear · <kbd>M</kbd> finger mode · <kbd>V</kbd> feed · <kbd>H</kbd> this panel</p>
+  </aside>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
