@@ -32,8 +32,6 @@ export class Visuals {
     this.canvas.width = this.W * dpr;
     this.canvas.height = this.H * dpr;
     this.g.setTransform(dpr, 0, 0, dpr, 0, 0);
-    this.g.fillStyle = '#06060e';
-    this.g.fillRect(0, 0, this.W, this.H);
   }
 
   // "cover" fit of the video into the canvas.
@@ -79,19 +77,11 @@ export class Visuals {
     const g = this.g;
     const { W, H } = this;
 
-    g.globalCompositeOperation = 'source-over';
-    g.fillStyle = 'rgba(6,6,14,0.2)';
+    // The camera feed is a mirrored <video> under this transparent canvas; fade trails by erasing.
+    this.video.style.display = this.showFeed && this.hasCamera ? 'block' : 'none';
+    g.globalCompositeOperation = 'destination-out';
+    g.fillStyle = 'rgba(0,0,0,0.25)';
     g.fillRect(0, 0, W, H);
-
-    if (this.showFeed && this.hasCamera && this.video.readyState >= 2) {
-      const f = this.frame();
-      g.save();
-      g.globalAlpha = 0.1;
-      g.translate(W, 0);
-      g.scale(-1, 1);
-      g.drawImage(this.video, f.ox, f.oy, f.dw, f.dh);
-      g.restore();
-    }
 
     g.globalCompositeOperation = 'lighter';
 
@@ -218,7 +208,7 @@ export class Visuals {
     const g = this.g;
     const P = pts.map((p) => this.map(p));
     g.lineCap = 'round';
-    for (const [w, a] of [[8, 0.1], [1.8, 0.85]]) {
+    for (const [w, a] of [[10, 0.14], [3, 0.95]]) {
       g.strokeStyle = `hsla(${hue},95%,68%,${a})`;
       g.lineWidth = w;
       g.beginPath();
@@ -228,6 +218,16 @@ export class Visuals {
       }
       g.stroke();
     }
+    g.fillStyle = `hsla(${hue},100%,85%,0.95)`;
+    P.forEach(([x, y], i) => {
+      g.beginPath();
+      g.arc(x, y, TIPS.includes(i) ? 4 : 3, 0, Math.PI * 2);
+      g.fill();
+    });
+    g.font = '600 12px ui-monospace, Menlo, monospace';
+    g.textAlign = 'center';
+    g.fillStyle = `hsla(${hue},100%,85%,0.95)`;
+    g.fillText(hue < 250 ? `LEFT · ${s.chord}` : 'RIGHT', P[0][0], P[0][1] + 24);
     for (const i of TIPS) {
       const [x, y] = P[i];
       const grad = g.createRadialGradient(x, y, 0, x, y, 16);
